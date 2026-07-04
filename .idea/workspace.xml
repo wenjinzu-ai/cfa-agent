@@ -4,168 +4,11 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4bded601-2948-47ca-a59a-d27c795acc8f" name="更改" comment="">
-      <change afterPath="$PROJECT_DIR$/.env" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.env.example" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/MarsCodeWorkspaceAppSettings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/cfa-agent.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/pyLspTools.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/pyProjectModel.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/pySourceRootDetection.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/default.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/guardrail.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/config/tools.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/cfa_agent.db" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/cfa_agent.db-shm" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/data/cfa_agent.db-wal" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/architecture.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/doc/development-plan.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_fix.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_fix3.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_fix_agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_log_test.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_patch.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_patch3.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/_patch_agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scripts/validate_scenarios.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agent/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agent/agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agent/agent_context.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agent/plan_executor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/agent/step_executor.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/deps.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/routes/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/routes/chat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/api/server.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/common/logger.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/decision_dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/perception.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/core/reasoning.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/behavior_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/guardrail_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/input_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/output_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/patterns.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/guardrails/tool_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/llm/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/llm/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/llm/openai_adapter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/llm/prompt_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/llm/token_counter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/long_term.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/retrieval.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/short_term.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/sqlite_store.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/memory/working_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/message.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/plan.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/models/tool.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/planner/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/planner/planner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/planner/reflector.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/intent/classify.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/reasoning/cot.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/reasoning/react.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/reasoning/reflect.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/reasoning/simple_chat.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/system/agent_role.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/system/safety_rules.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/prompts/tools/tool_call.yaml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/code_runner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/file_ops.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/registry.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/tool_dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/tools/web_search.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_agent/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_api/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_api/test_chat.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_common/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_common/test_config.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_common/test_exceptions.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_core/test_agent.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_core/test_decision_dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_core/test_perception.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_core/test_reasoning.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/test_behavior_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/test_guardrail_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/test_input_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/test_output_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_guardrails/test_tool_guardrail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_llm/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_llm/test_base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_llm/test_openai_adapter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_llm/test_prompt_manager.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_llm/test_token_counter.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/test_long_term.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/test_retrieval.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/test_short_term.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/test_sqlite_store.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_memory/test_working_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_models/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_models/test_memory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_models/test_message.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_models/test_plan.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_models/test_tool.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_planner/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_planner/test_planner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_planner/test_reflector.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/test_code_runner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/test_file_ops.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/test_registry.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/test_tool_dispatcher.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/test_tools/test_web_search.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/.oxlintrc.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/README.md" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/index.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/package-lock.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/package.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/public/favicon.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/public/icons.svg" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/App.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/ChatArea.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/ChatInput.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/MessageBubble.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/components/Sidebar.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/hooks/useChat.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/index.css" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/src/main.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/tsconfig.app.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/tsconfig.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/tsconfig.node.json" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ui/vite.config.ts" afterDir="false" />
+    <list default="true" id="4bded601-2948-47ca-a59a-d27c795acc8f" name="更改" comment="提交初始化">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/data/cfa_agent.db-wal" beforeDir="false" afterPath="$PROJECT_DIR$/data/cfa_agent.db-wal" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scripts/_log_test.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -175,6 +18,12 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "wenjinzu-ai"
+  }
+}]]></component>
   <component name="GithubPullRequestsUISettings"><![CDATA[{
   "selectedUrlAndAccountId": {
     "url": "https://github.com/wenjinzu-ai/cfa-agent.git",
@@ -310,12 +159,25 @@
       <workItem from="1783065907907" duration="1693000" />
       <workItem from="1783067615919" duration="3863000" />
       <workItem from="1783071496781" duration="4386000" />
-      <workItem from="1783126712913" duration="18250000" />
+      <workItem from="1783126712913" duration="18967000" />
     </task>
+    <task id="LOCAL-00001" summary="提交初始化">
+      <option name="closed" value="true" />
+      <created>1783150508287</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1783150508287</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="提交初始化" />
+    <option name="LAST_COMMIT_MESSAGE" value="提交初始化" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/cfa_agent$main.coverage" NAME="main 覆盖结果" MODIFIED="1783148457711" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="false" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
