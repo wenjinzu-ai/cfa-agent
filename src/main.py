@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import uvicorn
 
-from src.common.config import get_config
+from src.common.settings import get_config
 
 
 def main():

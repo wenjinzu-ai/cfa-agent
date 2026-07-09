@@ -28,6 +28,10 @@ env/
 Thumbs.db
 Desktop.ini
 
+# Data
+data/
+*.db
+
 # Environment & secrets
 .env
 .env.local

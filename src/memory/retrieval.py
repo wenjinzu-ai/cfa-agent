@@ -1,124 +1,163 @@
+"""CFA-Agent 记忆检索策略
+
+FTS5 全文搜索 + 融合排序，实现混合检索
+
+技术方案 §7.9：
+- FTS5 关键词检索（精确匹配）
+- 按重要性和时间衰减加权排序
+- 结果去重和融合
+"""
 from __future__ import annotations
 
-import math
+import logging
 from datetime import datetime, timezone
 
-from src.models.memory import RetrievalResult, MemoryEntry
-from src.memory.sqlite_store import SQLiteStore
+from src.common.types import MemoryType
+from src.db.repository.memory_repo import MemoryRepository
+
+logger = logging.getLogger("cfa-agent.memory.retrieval")
 
 
-class MemoryRetriever:
-    def __init__(self, store: SQLiteStore):
-        self._store = store
+class MemoryRetrieval:
+    """记忆检索策略
 
-    async def keyword_search(self, query: str, limit: int = 20) -> list[dict]:
-        return await self._store.search_memories_fts(query, limit)
+    职责：
+    - FTS5 全文搜索
+    - 混合检索（FTS5 + 重要性加权）
+    - 结果排序和过滤
 
-    async def temporal_search(
-        self,
-        category: str | None = None,
-        session_id: str | None = None,
-        limit: int = 20,
-    ) -> list[dict]:
-        return await self._store.search_memories_recent(category, session_id, limit)
+    Attributes:
+        _repo: 记忆数据访问层
+    """
 
-    async def tag_search(self, tags: list[str], limit: int = 20) -> list[dict]:
-        return await self._store.search_memories_by_tags(tags, limit)
+    def __init__(self, memory_repo: MemoryRepository):
+        self._repo = memory_repo
 
-    async def combined_search(
+    async def search_fts(
         self,
         query: str,
-        tags: list[str] | None = None,
-        weight_keyword: float = 0.5,
-        weight_temporal: float = 0.3,
-        weight_tag: float = 0.2,
-        limit: int = 20,
-    ) -> list[RetrievalResult]:
-        results_map: dict[int, dict] = {}
+        memory_type: MemoryType | None = None,
+        limit: int = 10,
+    ) -> list[dict]:
+        """FTS5 全文搜索
 
-        keyword_results = await self.keyword_search(query, limit * 3)
-        for r in keyword_results:
-            rid = r["id"]
-            if rid not in results_map:
-                results_map[rid] = {"entry": r, "scores": {}}
-            results_map[rid]["scores"]["keyword"] = self._normalize_fts_rank(r.get("rank", 999))
+        Args:
+            query: 搜索关键词
+            memory_type: 记忆类型过滤
+            limit: 返回数量上限
 
-        temporal_results = await self.temporal_search(limit=limit * 3)
-        for r in temporal_results:
-            rid = r["id"]
-            if rid not in results_map:
-                results_map[rid] = {"entry": r, "scores": {}}
-            hours_ago = self._hours_since(r["created_at"])
-            results_map[rid]["scores"]["temporal"] = self._temporal_decay(hours_ago)
+        Returns:
+            list[dict]: 匹配的记忆列表
+        """
+        results = await self._repo.search_fts(query, limit * 2)
 
-        if tags:
-            tag_results = await self.tag_search(tags, limit=limit * 3)
-            for r in tag_results:
-                rid = r["id"]
-                if rid not in results_map:
-                    results_map[rid] = {"entry": r, "scores": {}}
-                matched_tags_str = r.get("matched_tags", "")
-                matched_tags_list = matched_tags_str.split(",") if matched_tags_str else []
-                results_map[rid]["scores"]["tag"] = len(
-                    [t for t in tags if t in matched_tags_list]
-                )
+        if memory_type:
+            results = [r for r in results if r["memory_type"] == memory_type.value]
 
-        all_ids = list(results_map.keys())
-        tags_by_id = await self._batch_load_tags(all_ids)
+        return results[:limit]
+
+    async def hybrid_search(
+        self,
+        query: str,
+        limit: int = 10,
+        memory_type: MemoryType | None = None,
+    ) -> list[dict]:
+        """混合检索
+
+        融合 FTS5 关键词匹配和重要性排序
+
+        Args:
+            query: 搜索关键词
+            limit: 返回数量上限
+            memory_type: 记忆类型过滤
+
+        Returns:
+            list[dict]: 排序后的记忆列表
+        """
+        fts_results = await self.search_fts(query, memory_type, limit * 3)
+
+        type_results = []
+        if memory_type:
+            type_results = await self._repo.search_by_type(memory_type, limit=limit * 2)
+
+        all_results = {r["id"]: r for r in type_results}
+        for r in fts_results:
+            if r["id"] not in all_results:
+                all_results[r["id"]] = r
 
         scored = []
-        for rid, data in results_map.items():
-            s = data["scores"]
-            kw_score = s.get("keyword", 0.0)
-            tmp_score = s.get("temporal", 0.0)
-            tg_score = s.get("tag", 0.0) / max(len(tags), 1) if tags else 0.0
+        now = datetime.now(timezone.utc)
+        for mem in all_results.values():
+            score = self._score_memory(mem, query, now)
+            scored.append((mem, score))
 
-            total_weight = weight_keyword + weight_temporal + weight_tag
-            final_score = (
-                kw_score * weight_keyword
-                + tmp_score * weight_temporal
-                + tg_score * weight_tag
-            ) / total_weight
+        scored.sort(key=lambda x: x[1], reverse=True)
+        return [mem for mem, _ in scored[:limit]]
 
-            entry_tags = tags_by_id.get(rid, [])
-            matched_by = [k for k, v in s.items() if v > 0]
+    def _score_memory(self, memory: dict, query: str, now: datetime) -> float:
+        """计算记忆的相关性得分
 
-            scored.append(
-                RetrievalResult(
-                    entry=MemoryEntry.from_db_row(data["entry"], tags=entry_tags),
-                    score=round(final_score, 4),
-                    matched_by=matched_by,
-                )
-            )
+        综合因素：
+        - 重要性 (importance) * 0.4
+        - 访问热度 (access_count) * 0.2
+        - 时间衰减 (越新越高) * 0.2
+        - 关键词匹配度 * 0.2
 
-        scored.sort(key=lambda x: x.score, reverse=True)
-        return scored[:limit]
+        Args:
+            memory: 记忆记录
+            query: 查询关键词
+            now: 当前时间
 
-    async def _batch_load_tags(self, memory_ids: list[int]) -> dict[int, list[str]]:
-        if not memory_ids:
-            return {}
-        result: dict[int, list[str]] = {mid: [] for mid in memory_ids}
-        placeholders = ", ".join(["?"] * len(memory_ids))
-        rows = await self._store.execute_sql(
-            f"SELECT memory_id, tag FROM memory_tags WHERE memory_id IN ({placeholders})",
-            tuple(memory_ids),
+        Returns:
+            float: 综合得分
+        """
+        importance = memory.get("importance", 0.5)
+        access_count = min(memory.get("access_count", 0), 100) / 100.0
+
+        created_str = memory.get("created_at", "")
+        time_score = 0.5
+        if created_str:
+            try:
+                created = datetime.fromisoformat(created_str.replace("Z", "+00:00"))
+                days_diff = (now - created).days
+                time_score = max(0.0, 1.0 - days_diff / 180.0)
+            except (ValueError, TypeError):
+                pass
+
+        content = memory.get("content", "")
+        keyword_score = 0.0
+        if query and content:
+            query_lower = query.lower()
+            content_lower = content.lower()
+            query_terms = query_lower.split()
+            if query_terms:
+                matches = sum(1 for term in query_terms if term in content_lower)
+                keyword_score = matches / len(query_terms)
+
+        return (
+            importance * 0.4 +
+            access_count * 0.2 +
+            time_score * 0.2 +
+            keyword_score * 0.2
         )
-        for row in rows:
-            result[row["memory_id"]].append(row["tag"])
-        return result
 
-    @staticmethod
-    def _normalize_fts_rank(rank: float) -> float:
-        return 1.0 / (1.0 + abs(rank))
+    async def search_all_types(
+        self,
+        query: str,
+        limit: int = 10,
+    ) -> dict[str, list[dict]]:
+        """按类型检索所有记忆
 
-    @staticmethod
-    def _temporal_decay(hours_ago: float, lambda_decay: float = 0.01) -> float:
-        return math.exp(-lambda_decay * hours_ago)
+        Args:
+            query: 搜索关键词
+            limit: 每种类型返回数量上限
 
-    @staticmethod
-    def _hours_since(iso_timestamp: str) -> float:
-        dt = datetime.fromisoformat(iso_timestamp)
-        if dt.tzinfo is None:
-            dt = dt.replace(tzinfo=timezone.utc)
-        delta = datetime.now(timezone.utc) - dt
-        return delta.total_seconds() / 3600
+        Returns:
+            dict: 按类型分组的检索结果
+        """
+        results = {}
+        for mem_type in MemoryType:
+            results[mem_type.value] = await self.hybrid_search(
+                query, limit, mem_type,
+            )
+        return results

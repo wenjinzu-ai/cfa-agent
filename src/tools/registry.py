@@ -1,79 +1,107 @@
+"""CFA-Agent ToolRegistry 注册中心
+
+统一管理内置工具 + MCP 工具的注册、发现和调度
+"""
 from __future__ import annotations
 
-import threading
-from typing import Type
 
-from src.common.logger import logger
 from src.tools.base import BaseTool
-from src.models.tool import ToolDefinition
+from src.common.types import ToolSource
+from src.common.exceptions import ToolNotFoundError
 
 
 class ToolRegistry:
-    _instance: ToolRegistry | None = None
-    _lock: threading.Lock = threading.Lock()
+    """工具注册中心
+
+    职责：
+    - 管理工具的注册与注销
+    - 按名称查询工具
+    - 提供工具发现机制
+    - 生成 OpenAI Function Calling Schema 列表
+    - 对上层透明化工具来源差异（builtin / mcp）
+    """
 
     def __init__(self):
-        self._registry: dict[str, Type[BaseTool]] = {}
-        self._instances: dict[str, BaseTool] = {}
+        self._tools: dict[str, BaseTool] = {}
 
-    @classmethod
-    def get_instance(cls) -> ToolRegistry:
-        if cls._instance is None:
-            with cls._lock:
-                if cls._instance is None:
-                    cls._instance = cls()
-        return cls._instance
+    def register(self, tool: BaseTool) -> None:
+        """注册工具"""
+        self._tools[tool.name] = tool
 
-    def register(self, tool_class: Type[BaseTool]) -> Type[BaseTool]:
-        instance = tool_class()
-        name = instance.definition.name
-        if name in self._instances:
-            logger.warning("工具 %s 已注册，将被覆盖", name)
-        self._registry[name] = tool_class
-        self._instances[name] = instance
-        return tool_class
+    def unregister(self, name: str) -> None:
+        """注销工具"""
+        if name not in self._tools:
+            raise ToolNotFoundError(f"Tool not found: {name}")
+        del self._tools[name]
 
-    def get(self, name: str) -> BaseTool | None:
-        return self._instances.get(name)
+    def get(self, name: str) -> BaseTool:
+        """获取工具"""
+        if name not in self._tools:
+            raise ToolNotFoundError(f"Tool not found: {name}")
+        return self._tools[name]
 
-    def get_definition(self, name: str) -> ToolDefinition | None:
-        inst = self._instances.get(name)
-        return inst.definition if inst else None
+    def get_active_tools(self) -> list[BaseTool]:
+        """获取所有活跃工具"""
+        return [t for t in self._tools.values() if t.is_available()]
 
-    def list_tools(self) -> list[ToolDefinition]:
-        return [inst.definition for inst in self._instances.values()]
+    def get_tools_by_source(self, source: ToolSource) -> list[BaseTool]:
+        """按来源获取工具"""
+        return [t for t in self._tools.values() if t.source == source]
 
-    def list_schemas_for_llm(self) -> list[dict]:
-        schemas = []
-        for inst in self._instances.values():
-            d = inst.definition
-            schemas.append({
-                "type": "function",
-                "function": {
-                    "name": d.name,
-                    "description": d.description,
-                    "parameters": d.parameters,
-                },
-            })
-        return schemas
+    def get_openai_schemas(self) -> list[dict]:
+        """获取所有活跃工具的 OpenAI Function Calling Schema 列表
 
-    def discover(self, query: str, top_k: int = 3) -> list[tuple[str, float]]:
+        用于 ChatModel.bind_tools() 调用
+        """
+        return [t.to_openai_schema() for t in self.get_active_tools()]
+
+    def search_tools(self, query: str) -> list[BaseTool]:
+        """关键词搜索工具
+
+        在工具名称和描述中搜索匹配的工具
+        """
         query_lower = query.lower()
-        scores = []
-        for name, inst in self._instances.items():
-            d = inst.definition
-            searchable = f"{name} {d.description}".lower()
-            query_words = set(query_lower.split())
-            searchable_words = set(searchable.split())
-            overlap = len(query_words & searchable_words)
-            scores.append((name, float(overlap)))
-        scores.sort(key=lambda x: x[1], reverse=True)
-        return scores[:top_k]
+        results = []
+        for tool in self.get_active_tools():
+            if query_lower in tool.name.lower() or query_lower in tool.description.lower():
+                results.append(tool)
+        return results
 
-    def clear(self) -> None:
-        self._registry.clear()
-        self._instances.clear()
+    async def execute_tool(self, name: str, **kwargs) -> dict:
+        """执行工具
+
+        Args:
+            name: 工具名称
+            **kwargs: 工具参数
+
+        Returns:
+            dict: 执行结果
+        """
+        tool = self.get(name)
+        if not tool.is_available():
+            return {
+                "tool_name": name,
+                "status": "error",
+                "error": f"Tool '{name}' is not available (status: {tool.status.value})",
+            }
+        return await tool.safe_execute(**kwargs)
+
+    def list_all(self) -> list[BaseTool]:
+        """获取所有工具"""
+        return list(self._tools.values())
+
+    @property
+    def size(self) -> int:
+        """已注册工具数量"""
+        return len(self._tools)
 
 
-def tool_register(cls: Type[BaseTool]) -> Type[BaseTool]:
-    return ToolRegistry.get_instance().register(cls)
+_registry: ToolRegistry | None = None
+
+
+def get_tool_registry() -> ToolRegistry:
+    """获取全局工具注册表（单例模式）"""
+    global _registry
+    if _registry is None:
+        _registry = ToolRegistry()
+    return _registry

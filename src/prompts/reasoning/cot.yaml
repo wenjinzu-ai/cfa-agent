@@ -1,8 +1,0 @@
-system: |
-  请使用 Chain-of-Thought 方式逐步推理。
-  将复杂问题分解为步骤，逐步推导得出结论。
-
-user: |
-  问题：{question}
-
-  请逐步分析并给出结论：

@@ -1,0 +1,23 @@
+# MCP Server 连接配置
+servers:
+  - name: "filesystem"
+    transport: "stdio"
+    config:
+      command: "npx"
+      args: ["@modelcontextprotocol/server-filesystem", "/path/to/allowed/directory"]
+
+  - name: "github"
+    transport: "stdio"
+    config:
+      command: "npx"
+      args: ["@modelcontextprotocol/server-github"]
+      env:
+        GITHUB_PERSONAL_ACCESS_TOKEN: ""
+
+  - name: "brave-search"
+    transport: "stdio"
+    config:
+      command: "npx"
+      args: ["@modelcontextprotocol/server-brave-search"]
+      env:
+        BRAVE_API_KEY: ""
